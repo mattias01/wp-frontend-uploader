@@ -334,6 +334,17 @@ class Frontend_Uploader {
 				$media_ids[] = $upload_id;
 			else
 				$errors['fu-error-media'][] = $k['name'];
+			
+			// Add media to content.
+			$attachment_url = wp_get_attachment_url( $upload_id );
+			$previous_content = get_post_field( 'post_content', $post_id );
+			$previous_content_formatted = !empty( $previous_content ) ? $previous_content . '</br></br>' : '';
+			$post_content_with_media = $previous_content_formatted . '<a href="' . $attachment_url . '">' . '<img class="aligncenter" src="' . $attachment_url . '" width="350" height="400" /></a>';
+			$post_update = array(
+				'ID'           => $post_id,
+				'post_content' => $post_content_with_media,
+			);
+			wp_update_post( $post_update );
 		}
 
 		/**
